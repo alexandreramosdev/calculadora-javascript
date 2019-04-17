@@ -148,7 +148,13 @@ class CalcController {
   }
 
   getResult() {
-    return eval(this._operation.join(""));
+    try {
+      return eval(this._operation.join(""));
+    } catch (e) {
+      setTimeout(() => {
+        this.setError();
+      }, 1);
+    }
   }
 
   calc() {
@@ -158,7 +164,7 @@ class CalcController {
 
     if (this._operation.length < 3) {
       let firstItem = this._operation[0];
-      if (!this._lastNumber) return;
+
       this._operation = [firstItem, this._lastOperator, this._lastNumber];
     }
 
@@ -350,6 +356,10 @@ class CalcController {
   }
 
   set displayCalc(value) {
+    if (value.toString().length > 10) {
+      this.setError();
+      return;
+    }
     this._displayCalcEl.innerHTML = value;
   }
 
